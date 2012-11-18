@@ -2,6 +2,8 @@ Reinforced Concrete Axial Force-Bending Interaction Utility
 
 This readme is just some notes on how to compile. For use of the program see the help menu.
 
+If the source code did not come with this distribution it can obtained at: https://github.com/michaelweberjr/rccolumnbending
+
 This program uses the Qt framework for the gui. It is multi-plateform but instructions for windows are:
 To compile you need to Qt 4.8.3 which you can download here: http://qt-project.org/downloads
 You will also need Qt Creator which you can download at the same location.
