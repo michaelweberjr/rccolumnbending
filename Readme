@@ -1,0 +1,16 @@
+Reinforced Concrete Axial Force-Bending Interaction Utility
+
+This readme is just some notes on how to compile. For use of the program see the help menu.
+
+This program uses the Qt framework for the gui. It is multi-plateform but instructions for windows are:
+To compile you need to Qt 4.8.3 which you can download here: http://qt-project.org/downloads
+You will also need Qt Creator which you can download at the same location.
+
+For window you will need MinGW for the c++ compiler. You can get one that works well with Qt here: ftp://ftp.qt.nokia.com/misc/MinGW-gcc440_1.zip
+It is recommened that you unzip it to C:\
+
+Other platforms should be similar to this.
+
+For browsing the source code:
+algorithm.h/.cpp contain the code for calcuating the concrete section
+Everything else is for the gui
