@@ -74,9 +74,10 @@ void MainWindow::on_pushButton_3_clicked()
     //data->dump();
 
     data->calculate();
+    data->calculate2();
 
     Results *results = new Results(this);
-    results->setResults(data->results);
+    results->setResults(data);
     results->exec();
     delete results;
 }

@@ -16,6 +16,7 @@
 */
 
 #include "algorithm.h"
+#include <stdio.h>
 
 /*
  * This is where all the calculation occurs
@@ -192,6 +193,112 @@ void Algorithm::calculate()
     // Point 7 - Pure Tension
     results[5][0] = 0.9 * steelArea * -fs;
     results[5][1] = 0.0;
+
+    delete bar_row_force;
+    delete bar_row_strain;
+    delete bar_row_stress;
+}
+
+void Algorithm::calculate2()
+{
+    // Copies from calculate that we will need
+    // Calculate some values we might need
+    double phi = tied ? 0.65 : 0.75; // set the phi factor
+
+    // lets get the total area of steel
+    double steelArea = 0.0;
+    for(int i = 0; i < steelRows; i++)
+            steelArea += barrows[i].area;
+
+    // set beta1
+    double beta1 = 0.85;
+    if(fc > 4000 && fc < 8000) beta1 -= (fc-4000)/1000*0.05;
+    else if(fc >= 8000) beta1 = 0.65;
+
+    // find the largest depth to steel
+    double d = 0.0;
+    for(int i = 0; i < steelRows; i++)
+        if(barrows[i].depth > d) d = barrows[i].depth;
+
+    this->graphCount = 10000; // Arbitrairly set
+    if(unfactoredPoints == NULL)
+    {
+        this->unfactoredPoints = new double*[graphCount];
+        this->factoredPoints = new double*[graphCount];
+        for(int i = 0; i < graphCount; i++)
+        {
+            this->unfactoredPoints[i] = new double[2];
+            this->factoredPoints[i] = new double[2];
+        }
+    }
+
+    // First and last points are pure compression and pure tension respectively
+    unfactoredPoints[0][0] = 0.85*fc*(b*h-steelArea)+fs*steelArea;
+    unfactoredPoints[0][1] = 0;
+    factoredPoints[0][0] = unfactoredPoints[0][0] * 0.8 * phi;
+    factoredPoints[0][1] = 0;
+
+    unfactoredPoints[graphCount-1][0] = steelArea * -fs;
+    unfactoredPoints[graphCount-1][1] = 0.0;
+    factoredPoints[graphCount-1][0] = unfactoredPoints[graphCount-1][0] * 0.9;
+    factoredPoints[graphCount-1][1] = 0;
+
+    // All other points will be a function of the neutral axis from 0 to h
+    double es; // strain in steel at crushing
+    double c; // neutral axis
+    double a;
+    double force_c;
+
+    double *bar_row_strain = new double[steelRows];
+    double *bar_row_stress = new double[steelRows];
+    double *bar_row_force = new double[steelRows];
+    double steel_force;
+
+    for(int i = 1; i < graphCount-1; i++)
+    {
+        steel_force = 0.0;
+        c = h - ((i-1.0)/(graphCount-3.0))*h; // Neutral axis goes from h to 0 as a function of i
+        //printf("%d: %lf: ", i, c);
+        a = beta1 * c;
+        force_c = 0.85*fc*a*b;
+        es = 0.003 * (c - d) / c;
+        // Adjust the phi factor if we are more tension controlled
+        if(es > 0.002 && es < 0.005) phi = (tied ? 0.65 : 0.75) + (es-0.002) * (tied ? 250/3 : 50);
+        if(es >= 0.005) phi = 0.9;
+
+        for(int j = 0; j < steelRows; j++)
+        {
+            // strain first
+            bar_row_strain[j] = 0.003 * (c - barrows[j].depth) / c;
+
+            // then the stress
+            bar_row_stress[j] = bar_row_strain[j] * Es;
+            if(bar_row_stress[j] > fs) bar_row_stress[j] = fs;
+            else if(bar_row_stress[j] < -fs) bar_row_stress[j] = -fs;
+
+            // next is the force
+            if(barrows[j].depth < a) bar_row_force[j] = (bar_row_stress[j]-0.85*fc) * barrows[j].area;
+            else bar_row_force[j] = bar_row_stress[j] * barrows[j].area;
+
+            // finally we have the total force
+            steel_force += bar_row_force[j];
+        }
+
+        // Calculate Pn and Mn
+        unfactoredPoints[i][0] =  steel_force + force_c;
+        unfactoredPoints[i][1] = 0.5*force_c*(h-a);
+        for(int j = 0; j < steelRows; j++)
+            unfactoredPoints[i][1] += bar_row_force[j] * (0.5*h - barrows[j].depth);
+
+        factoredPoints[i][0] = phi * unfactoredPoints[i][0];
+        factoredPoints[i][1] = phi * unfactoredPoints[i][1];
+        if(factoredPoints[i][0] > factoredPoints[0][0]) factoredPoints[i][0] = factoredPoints[0][0];
+        //printf("%lf, %lf, %lf, %lf\n", unfactoredPoints[i][0]/1000, unfactoredPoints[i][1]/1000/12, factoredPoints[i][0]/1000, factoredPoints[i][1]/1000/12);
+    }
+
+    delete [] bar_row_force;
+    delete [] bar_row_strain;
+    delete [] bar_row_stress;
 }
 
 // Debug function

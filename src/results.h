@@ -18,7 +18,9 @@
 #ifndef RESULTS_H
 #define RESULTS_H
 
-#include <QDialog>
+#include <QtGui>
+#include "qcustomplot.h"
+#include "algorithm.h"
 
 namespace Ui {
 class Results;
@@ -31,7 +33,7 @@ class Results : public QDialog
 public:
     explicit Results(QWidget *parent = 0);
     ~Results();
-    void setResults(double results[6][2]);
+    void setResults(Algorithm *);
 
 private:
     Ui::Results *ui;

@@ -19,7 +19,8 @@ SOURCES += main.cpp\
     rowadd.cpp \
     results.cpp \
     about.cpp \
-    help.cpp
+    help.cpp \
+    qcustomplot.cpp
 
 HEADERS  += mainwindow.h \
     algorithm.h \
@@ -28,7 +29,8 @@ HEADERS  += mainwindow.h \
     rowadd.h \
     results.h \
     about.h \
-    help.h
+    help.h \
+    qcustomplot.h
 
 FORMS    += mainwindow.ui \
     rowdelete.ui \

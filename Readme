@@ -7,12 +7,16 @@ If the source code did not come with this distribution it can obtained at: https
 This program uses the Qt framework for the gui. It is multi-plateform but instructions for windows are:
 To compile you need to Qt 4.8.3 which you can download here: http://qt-project.org/downloads
 You will also need Qt Creator which you can download at the same location.
+Then you need to download QCustomPlot from http://www.workslikeclockwork.com/index.php/components/qt-plotting-widget/
+The source files qcostumplot.h/.cpp need to be copied into the /src directory
 
-For window you will need MinGW for the c++ compiler. You can get one that works well with Qt here: ftp://ftp.qt.nokia.com/misc/MinGW-gcc440_1.zip
+For windows you will need MinGW for the c++ compiler. You can get one that works well with Qt here: ftp://ftp.qt.nokia.com/misc/MinGW-gcc440_1.zip
 It is recommened that you unzip it to C:\
 
 Other platforms should be similar to this.
 
 For browsing the source code:
 algorithm.h/.cpp contain the code for calcuating the concrete section
+steelbars.h is the steel bar defines
+addrow.cpp has the standard bar sizes
 Everything else is for the gui

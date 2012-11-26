@@ -41,8 +41,15 @@ public:
     // The results
     double results[6][2];
 
+    // For the graph we need to calculate a bunch of points
+    int graphCount;                 // The number of points we calculate
+    double **unfactoredPoints;    // This is for the outside points
+    double **factoredPoints;      // This is for the inside points
+
     // This runs the calculations and puts the results in results (suprising, right?)
     void calculate();
+    // This runs the points for the graph for right now
+    void calculate2();
     // For debug purposes
     void dump();
 };
