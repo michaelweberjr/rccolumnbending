@@ -45,7 +45,19 @@
      <height>361</height>
     </rect>
    </property>
-   <zorder>tableWidget</zorder>
+  </widget>
+  <widget class="QPushButton" name="pushButton">
+   <property name="geometry">
+    <rect>
+     <x>610</x>
+     <y>350</y>
+     <width>94</width>
+     <height>27</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Export</string>
+   </property>
   </widget>
  </widget>
  <customwidgets>

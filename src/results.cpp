@@ -38,6 +38,7 @@ Results::Results(QWidget *parent) :
 
 void Results::setResults(Algorithm *data)
 {
+    this->data = data;
     for(int i = 0; i < 6; i++)
     {
         QString point("Point ");
@@ -83,4 +84,26 @@ void Results::setResults(Algorithm *data)
 Results::~Results()
 {
     delete ui;
+}
+
+void Results::on_pushButton_clicked()
+{
+    QFileDialog *saveFileDialog = new QFileDialog(this,
+                                      tr("Export Data"), "", tr("Excel Import (*.csv)"));
+    saveFileDialog->setDefaultSuffix("csv");
+    saveFileDialog->setViewMode(QFileDialog::Detail);
+    if(saveFileDialog->exec())
+    {
+        QStringList fileName = saveFileDialog->selectedFiles();
+        FILE* file = fopen(fileName[0].toAscii().data(), "w");
+        fprintf(file, "Pn (kip),Mn (kip-ft),phi-Pn (kip),phi-Mn (kip-ft)\n");
+        for(int i = 0; i < data->graphCount; i++)
+        {
+            fprintf(file, "%lf,%lf,%lf,%lf\n",data->unfactoredPoints[i][0]/1000,data->unfactoredPoints[i][1]/1000/12,
+                    data->factoredPoints[i][0]/1000, data->factoredPoints[i][1]/1000/12);
+        }
+
+        fclose(file);
+    }
+    delete saveFileDialog;
 }

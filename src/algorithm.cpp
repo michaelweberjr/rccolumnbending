@@ -261,7 +261,7 @@ void Algorithm::calculate2()
         //printf("%d: %lf: ", i, c);
         a = beta1 * c;
         force_c = 0.85*fc*a*b;
-        es = 0.003 * (c - d) / c;
+        es = -0.003 * (c - d) / c;
         // Adjust the phi factor if we are more tension controlled
         if(es > 0.002 && es < 0.005) phi = (tied ? 0.65 : 0.75) + (es-0.002) * (tied ? 250/3 : 50);
         if(es >= 0.005) phi = 0.9;
@@ -293,7 +293,7 @@ void Algorithm::calculate2()
         factoredPoints[i][0] = phi * unfactoredPoints[i][0];
         factoredPoints[i][1] = phi * unfactoredPoints[i][1];
         if(factoredPoints[i][0] > factoredPoints[0][0]) factoredPoints[i][0] = factoredPoints[0][0];
-        //printf("%lf, %lf, %lf, %lf\n", unfactoredPoints[i][0]/1000, unfactoredPoints[i][1]/1000/12, factoredPoints[i][0]/1000, factoredPoints[i][1]/1000/12);
+        //frintf("%d: %lf, %lf, %lf, %lf\n", i, factoredPoints[i][0]/1000, factoredPoints[i][1]/1000/12, phi, es);
     }
 
     delete [] bar_row_force;
